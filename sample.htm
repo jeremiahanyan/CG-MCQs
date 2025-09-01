@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Communication Skills Quiz</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f5f7fa; color: #222; }
+    h1 { text-align: center; }
+    .card { background: #fff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,.1); margin: 15px 0; }
+    .controls { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+    label { font-weight: bold; }
+    select, button { padding: 6px 10px; font-size: 14px; }
+    .question { font-weight: bold; margin-bottom: 10px; }
+    .options { list-style: none; padding: 0; }
+    .options li { margin: 6px 0; }
+    .options input { margin-right: 8px; }
+    .feedback { margin-top: 8px; font-style: italic; }
+    .correct { color: green; }
+    .wrong { color: red; }
+    .progress { margin-top: 20px; text-align: center; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <h1>Communication Skills Quiz (ENGL 158)</h1>
+
+  <div class="card controls">
+    <div>
+      <label for="lecture">Filter by topic</label>
+      <select id="lecture">
+        <option value="all">All topics</option>
+        <option value="Letters">Lecture 1 — Letter Writing</option>
+        <option value="Meetings">Lecture 2 — Meetings</option>
+        <option value="Minutes">Lecture 2 — Minutes Writing</option>
+        <option value="CommIntro">Lecture 3 — Introduction to Communication</option>
+        <option value="OralComm">Lecture 4 — Oral Communication</option>
+        <option value="WritingProcess">Lecture 5 — Writing as a Process</option>
+      </select>
+    </div>
+    <div>
+      <label for="mode">Mode</label>
+      <select id="mode">
+        <option value="study">Study (feedback each question)</option>
+        <option value="exam">Exam (feedback at the end)</option>
+      </select>
+    </div>
+    <div>
+      <button id="startBtn">Start Quiz</button>
+    </div>
+  </div>
+
+  <div id="quizArea" class="card hidden">
+    <div id="qCounter"></div>
+    <div id="questionText" class="question"></div>
+    <ul id="options" class="options"></ul>
+    <button id="nextBtn" class="hidden">Next</button>
+    <div id="feedback" class="feedback"></div>
+  </div>
+
+  <div id="resultArea" class="card hidden"></div>
+
+<script>
+// === QUESTIONS ARRAY ===
+const QUESTIONS = [
+  // Letters (201–217) – already built earlier
+  {id:201, lec:'Letters', topic:'Definition', q:'Which of these is the primary purpose of a formal letter?', 
+   opts:['Casual chatting','Official communication','Poetry writing','Personal diary'], 
+   a:1, e:'A formal letter is meant for official communication.'},
+  {id:202, lec:'Letters', topic:'Types', q:'An application letter is best described as:', 
+   opts:['A request for a job, admission, or position','A personal note to a friend','A ceremonial speech','An internal memo'], 
+   a:0, e:'Application letters request jobs, admissions, or positions.'},
+
+
+  // Meetings & Minutes (301–320) – already built earlier
+  {id:301, lec:'Meetings', topic:'Definition', q:'A meeting is generally defined as:', 
+   opts:['An informal chat','A formal interaction with some order','A lunch break','A group trip'], 
+   a:1, e:'A meeting is a formal interaction with order and rules.'},
+  {id:302, lec:'Meetings', topic:'Purpose', q:'Which is NOT a purpose of meetings?', 
+   opts:['Making decisions','Adhering to agenda','Appropriate behavior','Entertainment'], 
+   a:3, e:'Meetings are for order, agenda, and decisions — not entertainment.'},
+  // ... include all up to 320
+
+  // Intro to Communication (321–366)
+  {id:321, lec:'CommIntro', topic:'Definition', q:'Communication is best described as:', 
+   opts:['Process of transmitting and receiving information','A one-way act of speaking','Simply listening','Writing poetry'], 
+   a:0, e:'Communication involves transmitting and receiving information.'},
+  {id:322, lec:'CommIntro', topic:'System', q:'Viewing communication as a system means:', 
+   opts:['Only speaking and listening','Complex activities like resources and number of persons','Ignoring context','Only writing letters'], 
+   a:1, e:'Communication as a system involves complex activities beyond just talking.'},
+  // ... include all up to 366
+
+  // Writing as a Process (367–385)
+  {id:367, lec:'WritingProcess', topic:'Approach', q:'Which writing approach sees writing as nonlinear?', 
+   opts:['Product','Genre','Process','Structural'], 
+   a:2, e:'The Process Approach treats writing as nonlinear and recursive.'},
+  {id:368, lec:'WritingProcess', topic:'Motto', q:'The motto of the process approach is:', 
+   opts:['Writing is rewriting','Writing is easy','Plan once, write once','Drafting is final'], 
+   a:0, e:'The motto is “Writing is rewriting.”'},
+  // ... include all up to 385
+];
+
+// === QUIZ LOGIC ===
+let currentQs = [], currentIndex=0, score=0, mode='study';
+
+function startQuiz(){
+  const lecture = document.getElementById('lecture').value;
+  mode = document.getElementById('mode').value;
+  currentQs = QUESTIONS.filter(q => lecture==='all' || q.lec===lecture);
+  shuffle(currentQs);
+  currentIndex=0; score=0;
+  document.getElementById('quizArea').classList.remove('hidden');
+  document.getElementById('resultArea').classList.add('hidden');
+  showQuestion();
+}
+
+function showQuestion(){
+  const q = currentQs[currentIndex];
+  document.getElementById('qCounter').innerText = 
+    `Question ${currentIndex+1} of ${currentQs.length}`;
+  document.getElementById('questionText').innerText = q.q;
+  const ul = document.getElementById('options'); ul.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const li=document.createElement('li');
+    li.innerHTML=`<label><input type="radio" name="opt" value="${i}">${opt}</label>`;
+    ul.appendChild(li);
+  });
+  document.getElementById('feedback').innerHTML='';
+  document.getElementById('nextBtn').classList.remove('hidden');
+}
+
+function nextQuestion(){
+  const q=currentQs[currentIndex];
+  const chosen=document.querySelector('input[name=opt]:checked');
+  if(!chosen){alert('Select an option');return;}
+  const val=parseInt(chosen.value);
+  if(mode==='study'){
+    if(val===q.a){
+      document.getElementById('feedback').innerHTML=`<span class='correct'>Correct! ${q.e}</span>`;
+    } else {
+      document.getElementById('feedback').innerHTML=`<span class='wrong'>Wrong. ${q.e}</span>`;
+    }
+  }
+  if(val===q.a) score++;
+  currentIndex++;
+  if(currentIndex<currentQs.length){
+    setTimeout(showQuestion, mode==='study'?1500:500);
+  } else {
+    setTimeout(showResult, 1000);
+  }
+}
+
+function showResult(){
+  document.getElementById('quizArea').classList.add('hidden');
+  const res=document.getElementById('resultArea');
+  res.classList.remove('hidden');
+  res.innerHTML=`<h2>Result</h2>
+    <p>Score: ${score} / ${currentQs.length}</p>`;
+  if(mode==='exam'){
+    res.innerHTML+=`<h3>Review</h3>`;
+    currentQs.forEach((q,i)=>{
+      res.innerHTML+=`<p><b>Q${i+1}:</b> ${q.q}<br>
+      Correct: ${q.opts[q.a]}<br>
+      Explanation: ${q.e}</p>`;
+    });
+  }
+}
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}}
+
+document.getElementById('startBtn').onclick=startQuiz;
+document.getElementById('nextBtn').onclick=nextQuestion;
+</script>
+</body>
+</html>
