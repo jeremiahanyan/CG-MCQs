@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DAD 158 • Computer Graphics II • Exam Prep MCQs (Lectures 1–10)</title>
+  <style>
+    :root{
+      --bg:#0b0e14; --card:#121826; --muted:#7d8aa2; --text:#e8edf7; --accent:#7c5cff; --ok:#26c281; --bad:#ff5c5c; --ring:rgba(124,92,255,.35);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#0b0e14 0%,#0f1421 100%);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial}
+    .wrap{max-width:1000px;margin:auto;padding:24px}
+    header{display:flex;gap:14px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+    h1{font-size:clamp(20px,4vw,32px);margin:0}
+    .controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;width:100%;margin-top:12px}
+    .card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.35);padding:16px}
+    select,button,input[type=number]{width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:#0f1421;color:var(--text);outline:none}
+    select:focus,button:focus{box-shadow:0 0 0 4px var(--ring)}
+    button{cursor:pointer;background:var(--accent);border:none;font-weight:600}
+    button.secondary{background:#1b2234}
+    button.ghost{background:transparent;border:1px solid rgba(255,255,255,.15)}
+    button[disabled]{opacity:.5;cursor:not-allowed}
+    label{font-size:13px;color:var(--muted)}
+    .qcard{margin-top:18px}
+    .qtext{font-size:18px;margin:0 0 8px}
+    .meta{font-size:12px;color:var(--muted);margin-bottom:10px}
+    .options{display:grid;gap:10px;margin-top:10px}
+    .opt{padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.12);cursor:pointer;background:#0f1421;transition:transform .06s ease}
+    .opt:hover{transform:translateY(-1px)}
+    .opt.correct{border-color:rgba(38,194,129,.5);background:rgba(38,194,129,.1)}
+    .opt.wrong{border-color:rgba(255,92,92,.5);background:rgba(255,92,92,.08)}
+    .explain{margin-top:12px;color:#c7d2eb;font-size:14px;border-left:3px solid var(--accent);padding-left:10px}
+    .progress{height:10px;border-radius:999px;background:#1a2133;overflow:hidden;margin:16px 0}
+    .bar{height:100%;background:linear-gradient(90deg,var(--accent),#41d1ff);width:0%}
+    .footer{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-top:12px}
+    .pill{padding:6px 10px;border-radius:999px;background:#1b2234;border:1px solid rgba(255,255,255,.12);font-size:12px;color:var(--muted)}
+    .score{font-weight:700}
+    .grid-2{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+    .hidden{display:none}
+    .summary{margin-top:18px}
+    details{background:#0f1421;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px}
+    summary{cursor:pointer}
+    .tiny{font-size:12px;color:var(--muted)}
+    .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#0b0e14;border:1px solid rgba(255,255,255,.12);padding:1px 6px;border-radius:6px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>DAD 158 • Computer Graphics II — MCQ Trainer</h1>
+      <div class="pill">Lectures 1–10 • Vector Graphics • Illustrator • PowerPoint</div>
+    </header>
+
+    <div class="card controls">
+      <div>
+        <label for="lecture">Filter by lecture</label>
+        <select id="lecture">
+          <option value="all">All lectures</option>
+          <option value="1">Lecture 1 — PowerPoint (Transitions & Animations)</option>
+          <option value="2">Lecture 2 — Vector Graphics (Basics & History)</option>
+          <option value="3">Lecture 3 — Selection & Line Tools</option>
+          <option value="4">Lecture 4 — Drawing & Editing Tools</option>
+          <option value="5">Lecture 5 — Useful Shortcuts</option>
+          <option value="6">Lecture 6 — Importing & Exporting</option>
+          <option value="7">Lecture 7 — Image Trace & Template</option>
+          <option value="8">Lecture 8 — Flyer Workflow</option>
+          <option value="9">Lecture 9 — Poster/Business Card Practice</option>
+          <option value="10">Lecture 10 — Business Cards & 3D</option>
+        </select>
+      </div>
+      <div>
+        <label for="amount">Number of questions</label>
+        <select id="amount">
+          <option value="10">10</option>
+          <option value="20" selected>20</option>
+          <option value="40">40</option>
+          <option value="80">80</option>
+          <option value="all">All available</option>
+        </select>
+      </div>
+      <div>
+        <label for="mode">Mode</label>
+        <select id="mode">
+          <option value="exam">Exam (no answers until you submit)</option>
+          <option value="study" selected>Study (instant feedback)</option>
+        </select>
+      </div>
+      <div>
+        <label for="shuffle">Order</label>
+        <select id="shuffle">
+          <option value="shuffled" selected>Randomized</option>
+          <option value="sequential">Sequential</option>
+        </select>
+      </div>
+      <div>
+        <label>&nbsp;</label>
+        <button id="start">Start Quiz</button>
+      </div>
+      <div>
+        <label>&nbsp;</label>
+        <button id="resume" class="secondary">Resume Last Session</button>
+      </div>
+    </div>
+
+    <div id="quiz" class="card hidden">
+      <div class="meta" id="meta"></div>
+      <div class="progress"><div class="bar" id="bar"></div></div>
+      <div id="qbox" class="qcard"></div>
+      <div class="footer">
+        <div class="pill"><span id="tracker">0 / 0</span></div>
+        <div style="display:flex;gap:8px">
+          <button id="prev" class="ghost">Prev</button>
+          <button id="next">Next</button>
+          <button id="end" class="secondary">Finish</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="result" class="card hidden"></div>
+
+    <p class="tiny">Tip: press <span class="kbd">1</span>–<span class="kbd">4</span> to answer quickly. Your progress autosaves.</p>
+  </div>
+
+<script>
+// === Question bank ==========================================================
+const QUESTIONS = [
+  // Lecture 1 — PowerPoint transitions & animations (6)
+  {id:1, lec:1, topic:'Transitions', q:'In Microsoft PowerPoint, what is a slide transition?', opts:['An effect applied to a text box on a slide','How one slide is removed and the next is shown during a presentation','A preset animation for bullet points','A template for slide layouts'], a:1, e:'A transition controls how you move between slides (the outgoing/incoming effect), not how objects on a slide animate.'},
+  {id:2, lec:1, topic:'Transitions', q:'Which transition type moves only placeholders when two slides use similar layouts?', opts:['Subtle','Exciting','Dynamic Content','Morph'], a:2, e:'Dynamic Content transitions move only the placeholders when slide layouts are similar.'},
+  {id:3, lec:1, topic:'Animations', q:'Which statement correctly distinguishes a transition from an animation?', opts:['Transitions are effects between slides; animations are effects on objects within a slide','They are the same thing','Animations change slide layouts; transitions move placeholders','Transitions only affect text, animations affect images'], a:0, e:'Transitions occur between slides; animations are applied to elements (text, shapes, pictures) on a slide.'},
+  {id:4, lec:1, topic:'Animations', q:'Which animation type moves objects along a defined path, such as a circle or line?', opts:['Entrance','Emphasis','Exit','Motion Paths'], a:3, e:'Motion Paths move objects along a set path; they can also act as entrance/exit in some cases.'},
+  {id:5, lec:1, topic:'Timing', q:'In animation sequencing, what does “With Previous” mean?', opts:['Play after you click','Play at the same time as the previous animation','Delete the previous animation','Delay until slide transition ends'], a:1, e:'“With Previous” runs simultaneously with the previous event.'},
+  {id:6, lec:1, topic:'Animations', q:'How do you remove an animation from an object/slide?', opts:['Press Delete on the object','Choose Animation Pane > Hide','Select “None” as the animation type','Change the slide layout'], a:2, e:'Choose None in the animation type to remove the animation.'},
+
+  // Lecture 2 — Vector graphics basics & history (10)
+  {id:7, lec:2, topic:'Vector Basics', q:'Vector graphics are defined in terms of…', opts:['Pixels arranged in a grid','Points on a Cartesian plane connected by lines/curves (paths)','Color channels and alpha masks','Layers of bitmaps'], a:1, e:'Vectors use mathematically defined points and paths on an x/y plane.'},
+  {id:8, lec:2, topic:'Advantages', q:'A key advantage of vector graphics over raster graphics is:', opts:['Smaller file size in every case','Better for continuous-tone photos','Infinite scalability without aliasing (no jaggies)','Always faster to render'], a:2, e:'Vectors can be scaled up or down without loss of quality or pixelation.'},
+  {id:9, lec:2, topic:'Standards', q:'What is the W3C standard for vector graphics on the web?', opts:['JPEG','PNG','SVG','TIFF'], a:2, e:'Scalable Vector Graphics (SVG) is the W3C vector standard.'},
+  {id:10, lec:2, topic:'Formats', q:'Which set lists primarily vector formats?', opts:['JPEG, PNG, GIF','SVG, EPS, PDF, AI','MP4, MOV, GIF','BMP, TIFF, HEIC'], a:1, e:'SVG, EPS, PDF, and AI are vector-centric formats; JPEG/PNG are raster.'},
+  {id:11, lec:2, topic:'Properties', q:'In vector objects, “stroke” refers to…', opts:['The image background','The border/path outline of a shape','The interior fill of a shape','The drop shadow'], a:1, e:'Stroke is the path outline; fill is the interior.'},
+  {id:12, lec:2, topic:'Use Cases', q:'Vector graphics are widely used for:', opts:['Logos and line art that must scale to many sizes','Raw camera photos','Pixel-art sprites only','Video codecs'], a:0, e:'Vectors are ideal for logos, icons, and any artwork that requires flexible scaling.'},
+  {id:13, lec:2, topic:'History', q:'The first use of vector graphic displays cited in the slides was in 1958 by:', opts:['NASA Space Shuttle','US SAGE air defense system','IBM 2250','DEC GT40'], a:1, e:'Vector displays were first used by the US SAGE system in 1958.'},
+  {id:14, lec:2, topic:'History', q:'Who created Sketchpad, a pioneering vector system, in 1963?', opts:['John Warnock','Ivan Sutherland','Rene Descartes','Ken Thompson'], a:1, e:'Ivan Sutherland developed Sketchpad in 1963.'},
+  {id:15, lec:2, topic:'History', q:'Vector systems were retired from U.S. en route air traffic control in:', opts:['1984','1990','1999','2008'], a:2, e:'Slides note retirement from U.S. en route ATC in 1999.'},
+  {id:16, lec:2, topic:'Limits', q:'A limitation of vectors mentioned is that:', opts:['They cannot be printed','They are unsuitable for complex continuous-tone images from cameras without rasterization','They don’t support color','They cannot be edited'], a:1, e:'Cameras produce continuous-tone raster images; converting to vectors is impractical for such work.'},
+
+  // Lecture 3 — Selection & Line Tools (8)
+  {id:17, lec:3, topic:'Selection', q:'The Selection Tool in Illustrator primarily allows you to:', opts:['Edit individual anchors','Activate and move whole objects/groups (shows bounding box)','Paint with gradients','Freehand-select anchor points'], a:1, e:'Selection Tool selects whole objects or groups, enabling move/resize with the bounding box.'},
+  {id:18, lec:3, topic:'Selection', q:'Which tool is used to manipulate individual or multiple anchor points to reshape an object?', opts:['Selection Tool','Direct Selection Tool','Magic Wand Tool','Artboard Tool'], a:1, e:'The Direct Selection Tool targets anchors/segments for fine shape edits.'},
+  {id:19, lec:3, topic:'Selection', q:'The Group Selection Tool is hidden under the…', opts:['Pen Tool','Direct Selection Tool','Lasso Tool','Type Tool'], a:1, e:'It’s nested with Direct Selection and adds grouped items as you click.'},
+  {id:20, lec:3, topic:'Selection', q:'Magic Wand Tool selects objects based on similar…', opts:['Layer names','Fill/stroke attributes and tolerance','Artboard index','Resolution (ppi)'], a:1, e:'It selects objects with like values (fill/stroke) using tolerance and stroke weight.'},
+  {id:21, lec:3, topic:'Selection', q:'Lasso Tool lets you:', opts:['Apply masks','Draw freehand to select anchors/objects','Convert text to outlines','Switch workspaces'], a:1, e:'Lasso draws a freehand marquee to select anchors/objects.'},
+  {id:22, lec:3, topic:'Line Tools', q:'To constrain the Line Segment Tool to a perfectly horizontal/vertical/45° line, hold…', opts:['Alt','Shift','Ctrl','Tab'], a:1, e:'Hold Shift while dragging to constrain the angle.'},
+  {id:23, lec:3, topic:'Line Tools', q:'While dragging with the Arc Tool, which key flips the arc direction?', opts:['F','R','E','X'], a:0, e:'Press F to flip the arc while dragging.'},
+  {id:24, lec:3, topic:'Grids', q:'Using the Rectangular Grid Tool, which keys add/remove horizontal dividers as you drag?', opts:['Left/Right arrows','Up/Down arrows','Ctrl + Scroll','Shift + +/-'], a:1, e:'Up/Down adjust horizontal lines; Left/Right adjust vertical lines.'},
+
+  // Lecture 4 — Drawing & Editing Tools (8)
+  {id:25, lec:4, topic:'Shaper Tool', q:'The Shaper Tool can auto-convert rough drawings into precise shapes. Conversion is limited to:', opts:['Circles, squares/rectangles, and polygons','Any complex freeform logo','3D meshes','Text outlines only'], a:0, e:'Slides specify conversion for circles, squares/rectangles, and polygons.'},
+  {id:26, lec:4, topic:'Shaper Tool', q:'With Shaper Tool, scribbling inside overlapping areas will…', opts:['Change color','Punch out (erase) the scribbled region','Add a drop shadow','Rasterize the area'], a:1, e:'Scribble inside to punch out; scribble across shapes to merge.'},
+  {id:27, lec:4, topic:'Pencil Tool', q:'When drawing a freeform open path with the Pencil Tool, which small indicator appears?', opts:['Circle','Asterisk (*)','Plus (+)','Forward slash (/)'], a:1, e:'An asterisk indicates you’re drawing a new freeform path.'},
+  {id:28, lec:4, topic:'Pencil Tool', q:'To draw and close a shape with the Pencil Tool you should:', opts:['Hold Shift while dragging','Hold Alt while dragging until a small circle appears, then release mouse before Alt','Press Enter to close','Click the starting anchor exactly'], a:1, e:'Hold Alt; the small circle shows a closed path will be created.'},
+  {id:29, lec:4, topic:'Pencil Tool', q:'To continue an existing path with the Pencil Tool, position the cursor until the indicator changes to:', opts:['Plus (+)','Forward slash (/)','Crosshair','Chain link'], a:1, e:'A forward slash indicates you’re at an endpoint and can continue the path.'},
+  {id:30, lec:4, topic:'Editing', q:'The Smooth Tool is used to:', opts:['Convert text to outlines','Round/straighten jagged portions of a path','Change layer opacity','Create blends between shapes'], a:1, e:'Smooth Tool refines uneven segments to make paths cleaner.'},
+  {id:31, lec:4, topic:'Shape Builder', q:'Using Shape Builder on selected shapes, dragging combines areas; holding which key subtracts?', opts:['Shift','Alt (Option)','Ctrl','Tab'], a:1, e:'Alt/Option toggles to erase/subtract overlapping regions.'},
+  {id:32, lec:4, topic:'Live Paint', q:'With Live Paint Bucket active, you can quickly change colors by pressing…', opts:['Left/Right arrow keys','1–9 number keys','W/E keys','Shift + scroll'], a:0, e:'Use Left/Right arrows to cycle through swatches while painting regions.'},
+
+  // Lecture 5 — Useful Shortcuts (4)
+  {id:33, lec:5, topic:'Shortcuts', q:'Which function key shows/hides the Layers panel?', opts:['F5','F6','F7','F12'], a:2, e:'F7 toggles the Layers panel.'},
+  {id:34, lec:5, topic:'Shortcuts', q:'What is the quick key to toggle the Fill/Stroke focus?', opts:['X','S','C','V'], a:0, e:'Press X to swap/toggle Fill and Stroke.'},
+  {id:35, lec:5, topic:'Shortcuts', q:'Which key reverts the file to last saved state?', opts:['F12','Ctrl+Z','Ctrl+R','Shift+F6'], a:0, e:'F12 reverts the document.'},
+  {id:36, lec:5, topic:'Shortcuts', q:'Shortcut to show/hide the Stroke panel is:', opts:['Ctrl+F9','Ctrl+F10','Shift+Ctrl+F9','Ctrl+F11'], a:1, e:'Ctrl+F10 opens the Stroke panel.'},
+
+  // Lecture 6 — Importing & Exporting (8)
+  {id:37, lec:6, topic:'Place', q:'The primary method recommended to import graphics into Illustrator is:', opts:['File > Open','Edit > Paste Special','File > Place','Drag-and-drop only'], a:2, e:'Use File > Place for best format support and options.'},
+  {id:38, lec:6, topic:'Links', q:'Linked vs Embedded: which is true?', opts:['Linked artwork increases file size the most','Embedded artwork keeps the document smaller','Linked artwork references the original file externally; embedded copies it into the document','Embedded artwork cannot be transformed'], a:2, e:'Linked keeps the .ai file smaller and references the original; embedded stores a full copy.'},
+  {id:39, lec:6, topic:'Links', q:'Which panel helps you identify and update linked/embedded status?', opts:['Appearance','Links','Swatches','Symbols'], a:1, e:'The Links panel manages placed assets and their status.'},
+  {id:40, lec:6, topic:'Transparency', q:'Why use Place instead of copy/paste between apps?', opts:['Paste is faster','Place preserves transparency and quality better across apps','Paste auto-embeds fonts','Place disables scaling'], a:1, e:'The slides note transparency isn’t reliably preserved via copy/paste, but is via Place.'},
+  {id:41, lec:6, topic:'Embed', q:'After placing an image, which action permanently incorporates it into the Illustrator file?', opts:['Relink','Embed','Trace','Expand'], a:1, e:'Click Embed in the control bar to store the image within the .ai file.'},
+  {id:42, lec:6, topic:'EPS', q:'When you Place an EPS file it is not directly editable. To edit its contents you should:', opts:['Use Object > Expand','Use Type > Create Outlines','Open the EPS via File > Open or from Links panel','Rasterize it first'], a:2, e:'Open the EPS directly to edit; placed EPS acts like a single object.'},
+  {id:43, lec:6, topic:'Export', q:'Which resolution is typically chosen for high-quality print export?', opts:['72 ppi','150 ppi','300 ppi','600 ppi only'], a:2, e:'300 ppi is the standard “High” setting mentioned for print.'},
+  {id:44, lec:6, topic:'Color Modes', q:'Which pairing is generally correct?', opts:['RGB for large-format print; CMYK for screens','CMYK for print; RGB for screen previews','Grayscale is never used','LAB is mandatory'], a:1, e:'Slides recommend CMYK for print, RGB for screen.'},
+
+  // Lecture 7 — Image Trace & Template (8)
+  {id:45, lec:7, topic:'Image Trace', q:'Image Trace is used to:', opts:['Convert vector to raster','Convert raster images to vector paths for scalable artwork','Increase ppi of photos','Change color mode to CMYK'], a:1, e:'Image Trace converts raster images into vector shapes.'},
+  {id:46, lec:7, topic:'Presets', q:'Best preset for detailed photos?', opts:['High Fidelity Photo','Black and White Logo','6 Colors','Line Art'], a:0, e:'High Fidelity Photo yields the most detailed trace.'},
+  {id:47, lec:7, topic:'Presets', q:'A simple two-tone logo is best traced using:', opts:['Shades of Grey','16 Colors','Black and White Logo','Low Fidelity Photo'], a:2, e:'Use Black and White Logo for solid 2‑color art.'},
+  {id:48, lec:7, topic:'Expand', q:'After tracing, which command turns the tracing into editable vector shapes?', opts:['Ungroup','Expand','Release','Outline Stroke'], a:1, e:'Click Expand, then you may Ungroup to edit pieces.'},
+  {id:49, lec:7, topic:'Select Same', q:'To select all shapes sharing a fill color you use:', opts:['Object > Expand Appearance','Select > Same > Fill Color','Type > Create Outlines','Object > Clipping Mask > Make'], a:1, e:'Select > Same > Fill Color grabs all shapes of that fill.'},
+  {id:50, lec:7, topic:'Panel', q:'Where do you fine-tune tracing options (Mode, Colors, etc.)?', opts:['Swatches panel','Image Trace panel (Window > Image Trace)','Layers panel','Pathfinder panel'], a:1, e:'Open the Image Trace panel to refine settings.'},
+  {id:51, lec:7, topic:'Saving', q:'A vector format with wide cross‑app support recommended in the slides is:', opts:['JPG','SVG','GIF','BMP'], a:1, e:'Export As > SVG preserves vector scalability and is broadly supported.'},
+  {id:52, lec:7, topic:'Template', q:'When placing an image as a tracing template, which option should be checked in the Place dialog?', opts:['Link','Template','Embed','Opacity Mask'], a:1, e:'Check Template to import it onto a dimmed template layer.'},
+
+  // Lecture 8–9 — Flyer/Poster workflow (4)
+  {id:53, lec:8, topic:'Sizes', q:'A common standard flyer size mentioned is:', opts:['Letter (8.5" × 11")','Business card (3.5" × 2")','A3','4K UHD'], a:0, e:'Letter (or A4) is typical for flyers.'},
+  {id:54, lec:8, topic:'New Doc', q:'When creating a flyer, which New Document profile is suggested?', opts:['Web','Print','Mobile','Art & Illustration'], a:1, e:'Choose the Print profile for print‑oriented dimensions and settings.'},
+  {id:55, lec:8, topic:'Type', q:'Point text is created by:', opts:['Dragging a text box first','Clicking once with the Type Tool and typing','Using Area Type only','Expanding a shape'], a:1, e:'Click once with the Type Tool for point text (no bounding box).'},
+  {id:56, lec:8, topic:'Effects', q:'Which effect path is noted for a hand‑drawn look on shapes?', opts:['Effect > Blur > Gaussian','Effect > Stylize > Scribble','Effect > 3D > Extrude & Bevel','Effect > Distort & Transform > Pucker & Bloat'], a:1, e:'Stylize > Scribble produces a scribbled effect if used carefully.'},
+
+  // Lecture 10 — Business cards & 3D (8)
+  {id:57, lec:10, topic:'Size', q:'Standard business card size is:', opts:['2" × 2"','3.5" × 2"','90mm × 60mm only','4" × 3"'], a:1, e:'Slides specify 3.5" × 2" as the standard size.'},
+  {id:58, lec:10, topic:'Info', q:'Which of these are recommended on a business card?', opts:['Name and role/title','Email address and at least one phone number','Website (yours or your company’s)','All of the above'], a:3, e:'All of these are listed as essential/important contact info.'},
+  {id:59, lec:10, topic:'Color', q:'For print documents like business cards, you should set Document Color Mode to:', opts:['RGB','CMYK','Indexed Color','HSB'], a:1, e:'Use CMYK for print workflows.'},
+  {id:60, lec:10, topic:'Safety', q:'The “safety line” in a business card template indicates:', opts:['Where to cut the card','Where to place text/logos so they don’t risk being cut off','Exact bleed size','Printer margins only'], a:1, e:'Keep critical content inside the safety line.'},
+  {id:61, lec:10, topic:'Outlines', q:'To prevent font issues when sending to print, convert text via:', opts:['Type > Create Outlines','Object > Expand Appearance','Object > Rasterize','Window > Type'], a:0, e:'Create Outlines converts text to vector shapes.'},
+  {id:62, lec:10, topic:'3D', q:'After applying 3D Extrude & Bevel, which step lets you edit individual faces/paths?', opts:['Rasterize','Expand the object, then Ungroup','Outline Stroke first','Use Gradient Mesh'], a:1, e:'Slides outline: Apply 3D → Expand → Ungroup → Merge paths → Apply gradients.'},
+  {id:101, lec:1, topic:'Slide Show', q:'Which PowerPoint view is best for adding transitions between slides?', opts:['Normal view','Slide Sorter view','Notes Page view','Outline view'], a:1, e:'Slide Sorter view allows you to see multiple slides and apply transitions quickly.'},
+{id:102, lec:1, topic:'Animation Pane', q:'Where do you manage the order and timing of multiple animations on one slide?', opts:['Format panel','Animation Pane','Review tab','Slide Master'], a:1, e:'Use the Animation Pane to reorder and adjust timings of animations.'},
+
+
+// Lecture 2 — Vector graphics more
+{id:103, lec:2, topic:'Raster vs Vector', q:'Which is true about raster graphics compared to vectors?', opts:['They scale without quality loss','They are resolution-dependent','They are always smaller in file size','They are defined with paths and anchors'], a:1, e:'Raster graphics are made of pixels and lose quality when scaled.'},
+{id:104, lec:2, topic:'Use Cases', q:'Which project is least suited for vector graphics?', opts:['Logo design','Photographic image editing','Icon design','Infographics'], a:1, e:'Photo editing is better done in raster format such as Photoshop.'},
+
+
+// Lecture 3 — Tools more
+{id:105, lec:3, topic:'Direct Selection', q:'Which modifier key adds anchor points to the selection when using Direct Selection Tool?', opts:['Shift','Alt','Ctrl','Tab'], a:0, e:'Hold Shift to add more anchor points to your selection.'},
+{id:106, lec:3, topic:'Lasso Tool', q:'Which is NOT true of the Lasso Tool?', opts:['It selects anchor points with a freehand marquee','It can be used to select whole objects based on color','It can select curved sets of points','It allows multiple anchors to be selected'], a:1, e:'The Lasso Tool does not select by color; that’s the Magic Wand Tool.'},
+
+
+// Lecture 4 — Drawing & editing more
+{id:107, lec:4, topic:'Shape Builder', q:'Dragging with Shape Builder Tool without holding any key will:', opts:['Subtract shapes','Combine shapes','Open color panel','Convert to raster'], a:1, e:'Dragging by default merges selected regions into a single shape.'},
+{id:108, lec:4, topic:'Live Paint', q:'What must you do before using Live Paint Bucket on objects?', opts:['Rasterize them','Group them','Convert selection to a Live Paint Group','Lock them'], a:2, e:'Convert to a Live Paint Group first (Object > Live Paint > Make).'},
+
+
+// Lecture 5 — More Shortcuts
+{id:109, lec:5, topic:'Shortcuts', q:'Which shortcut toggles Screen Mode (Normal, Full Screen, etc.)?', opts:['F','Shift+F','Tab','Ctrl+F'], a:0, e:'Press F to cycle through screen modes.'},
+{id:110, lec:5, topic:'Shortcuts', q:'The shortcut Ctrl+D in Illustrator does what?', opts:['Duplicate last transformation','Delete selection','Deselect all','Display rulers'], a:0, e:'Ctrl+D repeats the last transformation (duplicate).'},
+{id:111, lec:5, topic:'Shortcuts', q:'What does Tab do in Illustrator?', opts:['Hide all panels','Toggle Stroke panel','Switch tools','Exit app'], a:0, e:'Tab hides/shows all panels, giving more workspace.'},
+{id:112, lec:5, topic:'Shortcuts', q:'Which shortcut toggles rulers on/off?', opts:['Ctrl+R','Ctrl+T','Ctrl+Alt+R','Shift+R'], a:0, e:'Ctrl+R toggles rulers.'},
+{id:113, lec:5, topic:'Shortcuts', q:'Which function key shows/hides the Color panel?', opts:['F5','F6','F8','F9'], a:0, e:'F5 toggles the Color panel.'},
+{id:114, lec:5, topic:'Shortcuts', q:'Which function key shows/hides the Appearance panel?', opts:['Shift+F6','F6','F9','F10'], a:0, e:'Shift+F6 toggles the Appearance panel.'},
+
+
+// Lecture 6 — Import/export more
+{id:115, lec:6, topic:'Export', q:'For web graphics, which export format is preferred?', opts:['TIFF','JPEG/PNG','EPS','PDF'], a:1, e:'JPEG/PNG are best for raster web graphics.'},
+{id:116, lec:6, topic:'Export', q:'Which menu path exports Illustrator artwork as PNG?', opts:['File > Export > Export As','File > Save As','File > Save for Print','Edit > Export'], a:0, e:'Use File > Export > Export As and select PNG.'},
+
+
+// Lecture 7 — Image Trace more
+{id:117, lec:7, topic:'Image Trace', q:'Which Image Trace mode results in black outlines with no fills?', opts:['Line Art','Shades of Gray','Color 6','Outline'], a:3, e:'Outline mode creates just paths with no fill.'},
+{id:118, lec:7, topic:'Template', q:'When placing an image as a template, Illustrator will automatically:', opts:['Lock and dim the image','Convert it to a vector','Delete colors','Rasterize it'], a:0, e:'Template layer images are dimmed and locked for tracing.'},
+
+
+// Lecture 8 — Flyers more
+{id:119, lec:8, topic:'Flyer Design', q:'Which principle is emphasized in flyer design for readability?', opts:['Use many fonts','Minimal text and clear hierarchy','Avoid contrast','Overlapping all objects'], a:1, e:'Slides emphasize hierarchy and clarity in text layout.'},
+
+
+// Lecture 9 — Posters more
+{id:120, lec:9, topic:'Poster Practice', q:'Which element is most important to include on an event poster?', opts:['Detailed bibliography','Event title and date/time','Personal contacts','All of the lecturer notes'], a:1, e:'Posters must highlight key event info like title, date, and time.'},
+
+
+// Lecture 10 — Business cards more
+{id:121, lec:10, topic:'3D', q:'Which panel lets you adjust lighting on 3D objects in Illustrator?', opts:['3D & Materials panel','Layers panel','Appearance panel','Stroke panel'], a:0, e:'The 3D & Materials panel controls lighting, depth, and shading.'},
+{id:122, lec:10, topic:'Business Card', q:'Bleed area in business card design ensures:', opts:['Colors extend beyond trim edge to avoid white borders','Text always centered','File size smaller','Nothing is cut'], a:0, e:'Bleed extends artwork past trim line to avoid white edges after cutting.'}
+];
+
+// === State ================================================================
+let state = {
+  order: [], // indices into active questions
+  active: [], // filtered questions
+  index: 0,
+  correct: 0,
+  mode: 'study',
+  answers: {}, // qid -> chosen index
+  revealed: {}, // qid -> true if explanation shown
+  startTime: 0,
+};
+
+// === Utilities ============================================================
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => document.querySelectorAll(s);
+const shuffle = (arr) => arr.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+const clamp = (n,min,max)=>Math.max(min,Math.min(max,n));
+const fmtTime = (ms)=>{const s=Math.floor(ms/1000),m=Math.floor(s/60),r=s%60;return `${m}m ${r}s`;};
+
+function saveSession(){
+  const payload = {state, ts: Date.now()};
+  localStorage.setItem('dad158_mcq_v1', JSON.stringify(payload));
+}
+function loadSession(){
+  try{const raw=localStorage.getItem('dad158_mcq_v1'); if(!raw) return null; return JSON.parse(raw);}catch(e){return null}
+}
+
+// === Rendering ============================================================
+function buildActive(){
+  const lecSel = $('#lecture').value;
+  let pool = QUESTIONS.filter(q=> lecSel==='all' ? true : String(q.lec)===lecSel);
+  const orderMode = $('#shuffle').value;
+  if(orderMode==='shuffled') pool = shuffle(pool);
+  const amtSel = $('#amount').value;
+  const amount = amtSel==='all' ? pool.length : parseInt(amtSel,10);
+  return pool.slice(0, amount);
+}
+
+function startQuiz(){
+  state.mode = $('#mode').value;
+  state.active = buildActive();
+  state.order = state.active.map((_,i)=>i);
+  state.index = 0;
+  state.correct = 0;
+  state.answers = {};
+  state.revealed = {};
+  state.startTime = Date.now();
+  $('#quiz').classList.remove('hidden');
+  $('#result').classList.add('hidden');
+  renderQuestion();
+  saveSession();
+}
+
+function resumeQuiz(){
+  const saved = loadSession();
+  if(!saved){ alert('No saved session found.'); return; }
+  state = saved.state;
+  $('#quiz').classList.remove('hidden');
+  $('#result').classList.add('hidden');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const total = state.active.length;
+  const idx = clamp(state.index, 0, Math.max(0,total-1));
+  state.index = idx;
+  const q = state.active[state.order[idx]];
+  if(!q){ finish(); return; }
+  const bar = $('#bar');
+  bar.style.width = ((idx)/total*100)+'%';
+  $('#tracker').textContent = `${idx+1} / ${total}`;
+  $('#meta').textContent = `Lecture ${q.lec} • ${q.topic}`;
+
+  const chosen = state.answers[q.id];
+  const revealed = state.revealed[q.id];
+
+  const opts = q.opts.map((t,i)=>{
+    const cls = [];
+    if(chosen!==undefined){
+      if(state.mode==='study' || revealed){
+        if(i===q.a) cls.push('correct');
+        if(i===chosen && chosen!==q.a) cls.push('wrong');
+      }
+    }
+    return `<div class="opt ${cls.join(' ')}" data-i="${i}"><strong>${String.fromCharCode(65+i)}.</strong> ${t}</div>`;
+  }).join('');
+
+  const explain = (state.mode==='study' && chosen!==undefined) || revealed
+    ? `<div class="explain">✅ <strong>Answer:</strong> ${String.fromCharCode(65+q.a)} — ${q.opts[q.a]}<br>${q.e}</div>`
+    : '';
+
+  $('#qbox').innerHTML = `
+    <h2 class="qtext">${q.q}</h2>
+    <div class="options">${opts}</div>
+    ${explain}
+  `;
+
+  // Buttons
+  $('#prev').disabled = idx===0;
+  $('#next').disabled = idx>=total-1;
+  $('#end').disabled = false;
+
+  // Keyboard shortcuts 1-4
+  document.onkeydown = (ev)=>{
+    if(['1','2','3','4'].includes(ev.key)){
+      choose(parseInt(ev.key,10)-1);
+    }else if(ev.key==='ArrowRight'){ next(); }
+    else if(ev.key==='ArrowLeft'){ prev(); }
+  };
+
+  // Click handlers
+  $$('#qbox .opt').forEach(el=>{
+    el.onclick = ()=> choose(parseInt(el.dataset.i,10));
+  });
+}
+
+function choose(i){
+  const q = state.active[state.order[state.index]];
+  if(i==null) return;
+  state.answers[q.id] = i;
+  if(state.mode==='study'){
+    if(i===q.a) state.correct += (state.revealed[q.id]?0:1);
+    state.revealed[q.id] = true;
+  }
+  saveSession();
+  renderQuestion();
+}
+
+function next(){ state.index++; renderQuestion(); saveSession(); }
+function prev(){ state.index--; renderQuestion(); saveSession(); }
+
+function finish(){
+  const total = state.active.length;
+  const time = fmtTime(Date.now() - state.startTime);
+
+  // Score calc
+  let correct = 0;
+  state.active.forEach(q=>{ if(state.answers[q.id]===q.a) correct++; });
+  state.correct = correct;
+
+  // Build review
+  let review = '';
+  state.active.forEach((q,idx)=>{
+    const pick = state.answers[q.id];
+    const status = pick===q.a ? '✅ Correct' : (pick==null?'⚠️ Skipped':'❌ Wrong');
+    review += `
+      <details ${pick===q.a?'':'open'}>
+        <summary><strong>Q${idx+1}.</strong> ${q.q} — <em>${status}</em> <span class="tiny">(Lecture ${q.lec} • ${q.topic})</span></summary>
+        <div style="margin-top:8px">
+          <div>• Your answer: <em>${pick==null?'—':String.fromCharCode(65+pick)+'. '+q.opts[pick]}</em></div>
+          <div>• Correct: <strong>${String.fromCharCode(65+q.a)}. ${q.opts[q.a]}</strong></div>
+          <div class="explain" style="border-left:none;padding-left:0;margin-top:8px">${q.e}</div>
+        </div>
+      </details>`;
+  });
+
+  $('#quiz').classList.add('hidden');
+  $('#result').classList.remove('hidden');
+  $('#result').innerHTML = `
+    <h2>Results</h2>
+    <div class="grid-2">
+      <div class="card" style="background:#0f1421">
+        <div class="pill">Mode: ${state.mode==='study'?'Study':'Exam'}</div>
+        <p class="score" style="font-size:28px;margin:6px 0 0">${correct} / ${total}</p>
+        <p class="tiny">Time: ${time}</p>
+        <div class="progress"><div class="bar" style="width:${(correct/total)*100}%"></div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+          <button class="secondary" onclick="startQuiz()">Retry same settings</button>
+          <button class="ghost" onclick="document.getElementById('result').classList.add('hidden');document.getElementById('quiz').classList.remove('hidden');">Review again</button>
+          <button onclick="localStorage.removeItem('dad158_mcq_v1');location.reload()">New quiz</button>
+        </div>
+      </div>
+      <div class="card" style="background:#0f1421">
+        <h3 style="margin:6px 0 8px">Review</h3>
+        <div class="tiny" style="margin-bottom:8px;color:#9fb0cf">Expand to see explanations and correct answers.</div>
+        <div class="summary">${review}</div>
+      </div>
+    </div>
+  `;
+  saveSession();
+}
+
+// === Events ===============================================================
+$('#start').onclick = startQuiz;
+$('#resume').onclick = resumeQuiz;
+$('#next').onclick = next;
+$('#prev').onclick = prev;
+$('#end').onclick = finish;
+
+// Prefill if a session exists
+(function(){ const saved=loadSession(); if(saved){ $('#resume').disabled=false; } else { $('#resume').disabled=true; }})();
+</script>
+</body>
+</html>
